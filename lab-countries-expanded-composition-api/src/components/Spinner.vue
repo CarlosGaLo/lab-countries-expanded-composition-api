@@ -7,13 +7,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "Spinner",
-  props: {
-    text: String,
-  },
-};
+<script setup>
+const props = defineProps({
+  text: String,
+});
 </script>
 
 <style scoped></style>

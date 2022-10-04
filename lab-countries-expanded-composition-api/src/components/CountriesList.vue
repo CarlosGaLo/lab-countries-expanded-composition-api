@@ -34,45 +34,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Spinner from "../components/Spinner.vue";
 import { ref, computed, onMounted, defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
-export default {
-  name: "CountriesList",
-  components: { Spinner },
-  // setup() {
-  //   const countries = ref(null),
 
-  //   const fetchCountries = async () => { };
+//Declare countries variable which will be used in the template section
+const countries = ref(null);
 
-  //   return {countries}
-  // },
-  data() {
-    return {
-      //definimos un valor de datos estilo array para recibir la info del api
-      countries: null,
-    };
-  },
-  methods: {
-    async fetchCountries() {
-      const response = await fetch(
-        "https://ih-countries-api.herokuapp.com/countries"
-      );
-      const finalResponse = await response.json();
-      // console.log(finalResponse);//VERIFICAMOS MEDIANTES UNA LLAMADA A CONSOLA QUE RECIBIMOS LOS DATOS
-      this.countries = finalResponse.sort((a, b) => {
-        return a.name.common.localeCompare(b.name.common);
-      });
-      console.log(finalResponse);
-    },
-  },
-  //usamos el created hook para hacer nuestra llamada inicial a nuestra base de datos.
-  //no usamos async en este caso porque la asincronia la maneja la funcion fetchCountries. El hook created() solo se encarga de llamar la funcion fetchCountries
-  created() {
-    this.fetchCountries();
-  },
-};
+//Create an async function which will replace the content of countries.value. Note that we have to use .value because we have declared countries as a ref.
+async function countriesAssign() {
+  //As long there is an async state, we have to use await. We use it at this point because we want the function to wait until db response.
+  const response = await fetch(
+    "https://ih-countries-api.herokuapp.com/countries"
+  );
+  const finalResponse = await response.json();
+  //console.log(finalResponse); //VERIFICAMOS MEDIANTES UNA LLAMADA A CONSOLA QUE RECIBIMOS LOS DATOS
+  //We add in order the elements of finalresponse to countries.value
+  countries.value = finalResponse.sort((a, b) => {
+    return a.name.common.localeCompare(b.name.common);
+  });
+}
+
+countriesAssign();
 </script>
 
 <style>

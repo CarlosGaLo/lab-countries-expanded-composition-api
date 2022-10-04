@@ -1,6 +1,6 @@
 ![logo_ironhack_blue 7](https://user-images.githubusercontent.com/23629340/40541063-a07a0a8a-601a-11e8-91b5-2f13e4e6b441.png)
 
-# LAB | Vue.js WikiCountries
+# LAB | Vue.js WikiCountries - Composition API
 
 ## Introduction
 
@@ -18,9 +18,7 @@ After spending too much time on GitHub, you found a [JSON dataset of countries](
 - Open the LAB and start:
 
   ```bash
-  $ cd lab-vue-wiki-countries
-  $ yarn install
-  $ yarn start
+  npm install
   ```
 
 
@@ -60,6 +58,10 @@ Remember to install the vue Router:
 ```shell
 $ yarn install vue-router
 ```
+or 
+```bash
+npm install vue-router
+```
 
 And set up the router in your `src/router.js` file:
 
@@ -70,18 +72,13 @@ import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
   {
     path: '/',
-    name: 'root',
-    component: () => import(/* webpackChunkName: 'index' */ './pages/index.vue')
-  },
-  {
-    path: '/list',
     name: 'list',
-    component: () => import(/* webpackChunkName: 'list' */ './pages/CountriesList.vue')
+    component: () => import('../components/CountriesList.vue'),
     children: [
       {
-        path: '/details',
-        name: 'details',
-        component: () => import(/* webpackChunkName: 'details' */ './pages/CountriesDetails.vue')
+        path: '/list/:alpha3Code',
+        name: 'list',
+        component: () => import( '../components/CountryDetails.vue')
       },
     ]
   }
@@ -94,6 +91,8 @@ const router = createRouter({
     document.getElementById('app').scrollIntoView();
   }
 });
+
+export default router
 ```
 
 ### Bootstrap installation
@@ -102,6 +101,10 @@ We will use [Bootstrap V4](https://getbootstrap.com/) for the design :+1:
 
 ```shell
 $ yarn install bootstrap
+```
+or
+```bash
+npm install bootstrap@v5.2.2
 ```
 
 To make the Bootstrap styles available in the entire app, import the stylesheet in `index.js`:
@@ -190,13 +193,20 @@ Instead of relying on the static data coming from a `json` file, let's do someth
 
 Let's make a `GET` request to the URL [https://ih-countries-api.herokuapp.com/countries](https://ih-countries-api.herokuapp.com/countries) and use the data returned from the response as the list of the countries. You can use either `fetch` or `axios` to make the request. 
 
-You should use the `mounted()` Hook to set the lifcycle hook that runs only once and makes a request to the API. The request should happen first thing when the application loads, therefore think about when and from where we should make the request to the API.
+If you are using Options API, you should use the `mounted()` Hook to set the lifcycle hook that runs only once and makes a request to the API. .
+
+You should use `<script setup>` to set de composition API lifecycle method which let you to work at the beggining of the lifecycle.
+<p align="center">
+  <img src="https://vuejs.org/assets/lifecycle.16e4c08e.png" alt="Where is the setup lifecycle" />
+</p>
+The request should happen first thing when the application loads, therefore think about when and from where we should make the request to the API
+
 
 ----
 
 ### Iteration 5 | Bonus | Fetch one country data from an API
 
-Using the `mounted()` hook set `CountriesDetails` component. It should make a request to the RestCountries API and fetch the data for the specific country. You can construct the request endpoint using the country's `alpha3Code`. Example:
+Set `CountriesDetails` component. It should make a request to the RestCountries API and fetch the data for the specific country. You can construct the request endpoint using the country's `alpha3Code`. Example:
 
 - United States: https://ih-countries-api.herokuapp.com/countries/USA
 - Japan: https://ih-countries-api.herokuapp.com/countries/JPN
